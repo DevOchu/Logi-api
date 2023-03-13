@@ -79,27 +79,7 @@ class CVRP:
             raise CVRPException("could not get overall locations")
         return overall_locations
 
-    @property
-    def compute_geodisic_distance_matrix(self):
-        """computes the distance matrix by using geopy"""
-
-        overall_locations = [waypoint["latlong"] for waypoint in self.overall_locations]
-        if not overall_locations:
-            raise CVRPException("could not getoverall_locations latlong")
-
-        distance_matrix = [
-            [(int(geodesic(p1, p2).km)) for p2 in overall_locations]
-            for p1 in overall_locations
-        ]
-        # time_matrix = [
-        #     [(int(geodesic(p1, p2).km/40)) for p2 in overall_locations]
-        #     for p1 in overall_locations
-        # ]
-        # print(time_matrix)
-        if not distance_matrix:
-            raise CVRPException("could not calculate matrix")
-        return distance_matrix
-
+    
     @property
     def compute_distance_matrix(self):
         """This computes the distance matrix by using GOOGLE MATRIX API"""
@@ -242,21 +222,17 @@ class CVRP:
             deliveries = [locations[i]["code"] for i in path[1 : (len(path) - 1)]]
 
             path_cordinates = [locations[i]["latlong"] for i in path]
-            
-            cords=json.dumps(path_cordinates)
-            
+              
           
             encoded_polyline = polyline.encode(path_cordinates, 5)
-            print(encoded_polyline)
-        
-            print(path_cordinates)
+           
            
             route_data["num_deliveries"] = len(deliveries)
             route_data["deliveries"] = deliveries
             route_data["route"] = path_adresses
             route_data["encoded_polyline"] = encoded_polyline
             route_data["path"]=path_cordinates[:-1]
-            route_data["cords"]=cords
+           
             
 
             # routes.append(plan_output)
