@@ -1,8 +1,6 @@
 [![Build Status](https://travis-ci.com/EUGINELETHAL/Order-Api.svg?branch=main)](https://travis-ci.com/EUGINELETHAL/Backend-challenge)
 [![Coverage Status](https://coveralls.io/repos/github/EUGINELETHAL/Order-Api/badge.svg?branch=main)](https://coveralls.io/github/EUGINELETHAL/Order-Api?branch=main)
-# LOGISTICS-API
-Logistics-Api is a simple REST  API used to upload customers orders.
-
+# 
 ..User Stories  <br /> <br /> 
 Users authenticates via OAUTH2 and OpenidCOnnect(GOogleOAuth 2.0 ) <br />
 Customer creates order  <br />
