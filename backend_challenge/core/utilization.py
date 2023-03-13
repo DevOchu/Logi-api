@@ -53,7 +53,7 @@ class LoadOptimization:
         for j in data["bins"]:
             solver.Add(
                 sum(x[(i, j)] * data["weights"][i] for i in data["items"])
-                <= y[j] * data["bin_capacities"][j]
+                
             )
         # if not bin capacity:
         #     return  num_bin 
@@ -67,7 +67,6 @@ class LoadOptimization:
         if status == pywraplp.Solver.OPTIMAL:
             drivers_dict = self.drivers.values()
             num_bins = 0
-            bins_used = []
             for j in data["bins"]:
                 if y[j].solution_value() == 1:
                     # self.drivers.objects.get(id=)
@@ -83,7 +82,7 @@ class LoadOptimization:
                     if bin_items:
                         num_bins += 1
             
-            return bins_used
+            return bins_items
         else:
             raise RoutingException
 

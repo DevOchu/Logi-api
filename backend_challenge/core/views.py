@@ -106,16 +106,7 @@ class DeliveryViewSet(viewsets.ModelViewSet):
         detail=False,
         methods=["POST"],
     )
-    def get_selected(self, request):
-
-        ids = request.data.get("ids")
-        # if not ids:
-        #     raise ValidationError("No deliveries were selected")
-        id_list = json.loads(ids)
-        request.session["selected"] = ids
-        deliveries = Delivery.objects.filter(code__in=id_list)
-        serializer = self.get_serializer(deliveries, many=True)
-        return Response(serializer.data)
+    
 
     # @action(detail=False)
     # def bulk_assign(self, request, *args, **kwargs):
@@ -213,14 +204,7 @@ class Contact(APIView):
     #     return Response(serializer.data, status.HTTP_200_OK)
 
 
-def get_selected_deliveries_in_session(request):
-    selected_delivery_codes = request.session.get("selected")
 
-    if selected_delivery_codes:
-        codes_list = json.loads(selected_delivery_codes)
-        deliveries = Delivery.objects.filter(code__in=codes_list)
-        return deliveries
-    raise CVRPException(" deliveries not found")
 
 
 @api_view()
@@ -249,15 +233,7 @@ def plan_routes(request):
             optimization_settings,
         )  # Rout
 
-    elif optimization_settings.selection == "Min_Veh":
-
-        optimization = LoadOptimization(deliveries, all_drivers)
-        list_of_ids = optimization.main()
-
-        drivers = all_drivers.filter(pk__in=list_of_ids)
-        print(drivers)
-
-        route = CVRP(drivers, deliveries, optimization_settings)  # Rout
+     # Rout
 
     routes_summary = route.generate_routes()
     trip_data = routes_summary.get("routes", None)
@@ -273,7 +249,6 @@ def dispatch_routes(request):
     """
     Creates and dispatches trip from routes
     """
-    routes = request.session.get("trip_data", None)
 
     if routes:
         with transaction.atomic():
@@ -310,8 +285,7 @@ def dispatch_routes(request):
 
             # print(trip.deliveries_in_trip.all())
 
-            del request.session["trip_data"]
-            del request.session["selected"]
+          
             return Response({"message": "Trip_created"})
     return Response(
         {"message": "Dispatch cannot occur, No route data found"},
@@ -320,8 +294,7 @@ def dispatch_routes(request):
     # raise DispatchException
 
 
-@api_view()
-def optimize_dispatch(request):
+
 
     deliveries = get_selected_deliveries_in_session(request)
     if not deliveries:
